@@ -8,7 +8,9 @@
 python template_generator.py
 ```
 Take file "sample_template.txt" as an example, we input as below:
+
 ![sample_generator](./sample_generator.png)
+
 So content of the file "sample_template.txt" generated is:
 ```json
 {
@@ -69,11 +71,13 @@ http://[Domain Name or IP Address]:[Port you set]/
 Eg: http://localhost:5555/
 ```
 ![sample_result](./sample_result.png)
+
 Visit URL below to vote:
 ```
 http://[Domain Name or IP Address]:[Port you set]/vote.html?guid=[GUID]
 Eg: http://localhost:5555/vote.html?guid=00c57f5a-a3e1-11ea-b270-b025aa18fa9c
 ```
 ![sample_vote](./sample_vote.png)
+
 **Requirements:**
 Python 3.x, flask
