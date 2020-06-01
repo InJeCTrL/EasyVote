@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>EasyVote</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	</head>
+	<link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+	<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.min.js"></script>
+	<body>
+		<div class="container">
+			<div id="questionlist">
+			</div>
+			<button class="btn btn-success btn-block" id="vote">Vote</button>
+			<button class="btn btn-warning btn-block" id="abstain">Abstain</button>
+		</div>
+		<script>
+			var _guid = "{{GUID}}";
+			var _nQuestion = 0;
+			function showdata()
+			{
+				$.ajax({
+					type: "get",
+					url: "./api/question",
+					success: function(data){
+						var questions = data["data"];
+						_nQuestion = data["question_count"];
+						$("title").html(data["topic"]);
+						for (var i = 0; i < questions.length; ++i) {
+							$("#questionlist").append($("<label></label>").text(questions[i]["Question"]));
+							for (var j = 0; j < questions[i]["Answers"].length; ++j) {
+								$("#questionlist").append($("<div class='input-group mb-3'></div>")
+								.append($("<div class='input-group-prepend'></div>")
+								.html($("<div class='input-group-text'></div>")
+								.html("<input name='" + i + "' type='radio' value='" + j + "'>"))).append("<input type='text' disabled='disabled' class='form-control' value='" + questions[i]["Answers"][j]["Answer"] + " (" + questions[i]["Answers"][j]["Score"] + " pts)'>"));
+							}
+						}
+					}
+				});
+			}
+			$("#vote").bind('click', function(){
+				var _data = [];
+				for (var i = 0; i < _nQuestion; ++i) {
+					_data[i] = $("input[name='" + i + "']:checked").val();
+				}
+				console.log({guid:_guid, data: JSON.stringify(_data)});
+				$.ajax({
+					type: "post",
+					url: "./api/vote",
+					data: {guid:_guid, data: JSON.stringify(_data)},
+					success: function(data){
+						alert(data["data"]);
+						$(location).attr("href", "/");
+					}
+				});
+			});
+			$("#abstain").bind('click', function(){
+				$.ajax({
+					type: "post",
+					url: "./api/abstain",
+					data: {guid:_guid},
+					success: function(data){
+						alert(data["data"]);
+						$(location).attr("href", "/");
+					}
+				});
+			});
+			$(document).ready(showdata);
+		</script>
+	</body>
+</html>

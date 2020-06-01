@@ -1,0 +1,75 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>EasyVote</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	</head>
+	<link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+	<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.min.js"></script>
+	<body>
+		<div class="container">
+			<div>
+				<label>Score:</label>
+				<div class="progress" style="height: 50px;">
+					<div id="totalprog" class="progress-bar bg-success" style="width:0">
+				    	<span id="totalmark" style="font-size: x-large;">0</span>
+					</div>
+				  	<div id="restprog" class="progress-bar bg-danger" style="width:100">
+				    	<span id="restmark" style="font-size: x-large;">0</span>
+				  	</div>
+				</div>
+			</div>
+			<div style="text-align: center;">
+				<span id="totalv">0</span> Participants (<span id="vcount">0</span> voted, <span id="abcount">0</span> abstained)
+			</div>
+			<div id="questionlist">
+			</div>
+		</div>
+		<script>
+			function showdata()
+			{
+				$.ajax({
+					type: "get",
+					url: "./api/result",
+					success: function(data){
+						var total_score = data["total_score"];
+						var full_score = data["full_score"];
+						var rest_score = data["rest_score"];
+						var totalrate = full_score != 0 ? total_score / full_score * 100 : 0;
+						var restrate = full_score != 0 ? rest_score / full_score * 100 : 0;
+						var total_vcount = data["total_vcount"];
+						var voted_vcount = data["voted_vcount"];
+						var abstain_vcount = data["abstain_vcount"];
+						var questions = data["data"];
+						$("title").html(data["topic"]);
+						$("#totalprog").css("width", totalrate + "%");
+						$("#totalmark").text(total_score);
+						$("#restprog").css("width", restrate + "%");
+						$("#restmark").text(rest_score);
+						$("#totalv").text(total_vcount);
+						$("#vcount").text(voted_vcount);
+						$("#abcount").text(abstain_vcount);
+						for (var i = 0; i < questions.length; ++i) {
+							$("#questionlist").append($("<label></label>").text(questions[i]["Question"]));
+							$("#questionlist").append("<div id='Q" + i + "' class='card' style='padding: 10px;'></div>");
+							var max = 0;
+							for (var j = 0; j < questions[i]["Answers"].length; ++j) {
+								if (questions[i]["Answers"][j]["Count"] > max){
+									max = questions[i]["Answers"][j]["Count"];
+								}
+								$("#Q" + i).append($("<span></span>").text(questions[i]["Answers"][j]["Answer"] + " (" + questions[i]["Answers"][j]["Score"] + " pts)"),
+								$("<div class='progress'></div>").html($("<div id='Q" + i + "A" + j + "' class='progress-bar bg-info' style='width:0%'></div>").text(questions[i]["Answers"][j]["Count"])));
+							}
+							for (var j = 0; j < questions[i]["Answers"].length; ++j) {
+								$("#Q" + i + "A" + j).css("width", questions[i]["Answers"][j]["Count"] * 100 / max + "%");
+							}
+						}
+					}
+				});
+			}
+			$(document).ready(showdata);
+		</script>
+	</body>
+</html>
