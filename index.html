@@ -45,9 +45,9 @@
 						var questions = data["data"];
 						$("title").html(data["topic"]);
 						$("#totalprog").css("width", totalrate + "%");
-						$("#totalmark").text(total_score);
+						$("#totalmark").text(total_score + "(" + totalrate.toFixed(1) + "%)");
 						$("#restprog").css("width", restrate + "%");
-						$("#restmark").text(rest_score);
+						$("#restmark").text(rest_score + "(" + restrate.toFixed(1) + "%)");
 						$("#totalv").text(total_vcount);
 						$("#vcount").text(voted_vcount);
 						$("#abcount").text(abstain_vcount);
