@@ -96,12 +96,11 @@ def postAbstain():
         return jsonify({"success":0, "data":"Abstained successfully!"})
 
 @app.route("/", methods = ["GET"])
-@app.route("/vote.html", methods = ["GET"])
-def index():
-    v_guid = request.args.get("guid")
+@app.route("/<string:guid>", methods = ["GET"])
+def index(guid):
     with m_vote:
-        if GUIDs.__contains__(v_guid) and GUIDs[v_guid] == False:
-            return render_template("./vote.html", GUID = v_guid)
+        if GUIDs.__contains__(guid) and GUIDs[guid] == False:
+            return render_template("./vote.html", GUID = guid)
         else:
             return send_file("./index.html")
 
