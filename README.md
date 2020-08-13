@@ -14,37 +14,31 @@ Take file "sample_template.txt" as an example, we input as below:
 So content of the file "sample_template.txt" generated is:
 ```json
 {
-    "Topic": "TestVote",
-    "Questions": [
-        {
-            "Question": "Q1",
-            "Answers": [
-                {
-                    "Answer": "A1",
-                    "Score": 
-                    10
-                },
-                {
-                    "Answer": "A2",
-                    "Score": 5
-                },
-                {
-                    "Answer": "A3",
-                    "Score": 0
-                }]
-        },
-        {
-            "Question": "Q2",
-            "Answers": [
-                {
-                    "Answer": "A4",
-                    "Score": 3
-                },
-                {
-                    "Answer": "A5",
-                    "Score": 1
-                }]
-        }]
+	"Topic": "TestVote",
+	"Tip": "Vote TIP",
+	"TimeLimit": "3600",
+	"Questions": [{
+		"Question": "Q1",
+		"Answers": [{
+			"Answer": "A1",
+			"Score": 10
+		}, {
+			"Answer": "A2",
+			"Score": 5
+		}, {
+			"Answer": "A3",
+			"Score": 0
+		}]
+	}, {
+		"Question": "Q2",
+		"Answers": [{
+			"Answer": "A4",
+			"Score": 3
+		}, {
+			"Answer": "A5",
+			"Score": 1
+		}]
+	}]
 }
 ```
 2. Run server
@@ -74,8 +68,8 @@ Eg: http://localhost:5555/
 
 Visit URL below to vote:
 ```
-http://[Domain Name or IP Address]:[Port you set]/vote.html?guid=[GUID]
-Eg: http://localhost:5555/vote.html?guid=00c57f5a-a3e1-11ea-b270-b025aa18fa9c
+http://[Domain Name or IP Address]:[Port you set]/[GUID]
+Eg: http://localhost:5555/00c57f5a-a3e1-11ea-b270-b025aa18fa9c
 ```
 ![sample_vote](./sample_vote.png)
 
