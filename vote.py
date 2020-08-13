@@ -134,7 +134,7 @@ def inputParser(path):
         Topic = data_parsed["Topic"]
         Tip = data_parsed["Tip"]
         Tip_timeout = "The vote will end on %s." % (datetime.datetime.now() + datetime.timedelta(seconds=int(data_parsed["TimeLimit"]))).strftime("%Y-%m-%d %H:%M:%S")
-        threading.Thread(target=timedout, args=(int(data_parsed["TimeLimit"]),)).start()
+        threading.Thread(target=timedout, daemon = True, args=(int(data_parsed["TimeLimit"]),)).start()
         Questions = data_parsed["Questions"].copy()
         Questions_Scored = Questions.copy()
         for question in Questions_Scored:
