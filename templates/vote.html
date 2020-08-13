@@ -10,6 +10,12 @@
 	<script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.min.js"></script>
 	<body>
 		<div class="container">
+			<div style="background-color: lightgray; border-radius: 5px; padding: 5px;">
+				<label>TIP:</label>
+				<div id="tip">None</div>
+			</div>
+			<div id="tip_timeout" style="text-align: center; color: red; font-weight: bold;">
+			</div>
 			<div id="questionlist">
 			</div>
 			<button class="btn btn-success btn-block" id="vote">Vote</button>
@@ -27,6 +33,8 @@
 						var questions = data["data"];
 						_nQuestion = data["question_count"];
 						$("title").html(data["topic"]);
+						$("#tip").text(data["tip"]);
+						$("#tip_timeout").text(data["tip_timeout"]);
 						for (var i = 0; i < questions.length; ++i) {
 							$("#questionlist").append($("<label></label>").text(questions[i]["Question"]));
 							for (var j = 0; j < questions[i]["Answers"].length; ++j) {

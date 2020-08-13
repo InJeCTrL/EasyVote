@@ -2,9 +2,12 @@ import json
 
 Questions = []
 Topic = ""
+Tip = ""
 
 i_Q = 0
 Topic = input("Input Topic of the Vote:")
+Tip = input("Input Tip of the Vote:")
+TimeLimit = input("Input time limit(seconds) of the Vote:")
 while True:
     tQuestion = input("Input Question(string):")
     if not tQuestion:
@@ -20,4 +23,5 @@ while True:
     i_Q += 1
 
 with open("template.txt", "w", encoding='utf-8') as f:
-    f.write(json.dumps({"Topic": Topic, "Questions": Questions}))
+    f.write(json.dumps({"Topic": Topic, "Tip": Tip,
+                        "TimeLimit": TimeLimit, "Questions": Questions}))

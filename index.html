@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="UTF-8">
@@ -21,8 +21,14 @@
 				  	</div>
 				</div>
 			</div>
+			<div id="tip_timeout" style="text-align: center; color: red; font-weight: bold;">
+			</div>
 			<div style="text-align: center;">
 				<span id="totalv">0</span> Participants (<span id="vcount">0</span> voted, <span id="abcount">0</span> abstained)
+			</div>
+			<div style="background-color: lightgray; border-radius: 5px; padding: 5px;">
+				<label>TIP:</label>
+				<div id="tip">None</div>
 			</div>
 			<div id="questionlist">
 			</div>
@@ -44,6 +50,8 @@
 						var abstain_vcount = data["abstain_vcount"];
 						var questions = data["data"];
 						$("title").html(data["topic"]);
+						$("#tip").text(data["tip"]);
+						$("#tip_timeout").text(data["tip_timeout"]);
 						$("#totalprog").css("width", totalrate + "%");
 						$("#totalmark").text(total_score + "(" + totalrate.toFixed(1) + "%)");
 						$("#restprog").css("width", restrate + "%");

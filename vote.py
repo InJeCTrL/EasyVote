@@ -3,6 +3,8 @@ import argparse
 import threading
 import uuid
 import json
+import time
+import datetime
 
 argParser = argparse.ArgumentParser()
 argParser.description = 'For learning use only, DO NOT use it for illegal purposes. -- InJeCTrL'
@@ -20,6 +22,8 @@ Questions_Scored = []
 Questions = []
 Total = 0
 Full = 0
+Tip = ""
+Tip_timeout = ""
 Topic = ""
 n_Voted = 0
 n_Abstain = 0
@@ -37,12 +41,13 @@ app = Flask(__name__)
 @app.route("/api/result", methods = ["GET"])
 def getResult():
     return jsonify({"total_score": Total, "full_score": Full, "rest_score": Full - Total,
+                    "tip": Tip, "tip_timeout": Tip_timeout,
                     "total_vcount": n_Voters, "voted_vcount": n_Voted, "abstain_vcount": n_Abstain,
                     "topic": Topic, "question_count": len(Questions) ,"data": Questions_Scored})
 
 @app.route("/api/question", methods = ["GET"])
 def getQuestionList():
-    return jsonify({"topic": Topic, "question_count": len(Questions) ,"data": Questions})
+    return jsonify({"topic": Topic, "tip": Tip, "tip_timeout": Tip_timeout, "question_count": len(Questions) ,"data": Questions})
 
 @app.route("/api/vote", methods = ["POST"])
 def postVote():
@@ -97,21 +102,39 @@ def postAbstain():
 
 @app.route("/", methods = ["GET"])
 @app.route("/<string:guid>", methods = ["GET"])
-def index(guid):
+def index(guid = ""):
     with m_vote:
         if GUIDs.__contains__(guid) and GUIDs[guid] == False:
             return render_template("./vote.html", GUID = guid)
         else:
             return send_file("./index.html")
 
+def timedout(TimeLimit):
+    global GUIDs
+    global n_Abstain
+    global Tip_timeout
+    time.sleep(TimeLimit)
+    with m_vote:
+        for guid in GUIDs:
+            if GUIDs[guid] == False:
+                GUIDs[guid] = True
+                n_Abstain += 1
+    Tip_timeout = "The vote is over."
+
 def inputParser(path):
     global Questions
     global Questions_Scored
     global Topic
+    global Tip
+    global Tip_timeout
+    global timedout_task
     with open(path, "r") as f:
         content = f.read()
         data_parsed = json.loads(content)
         Topic = data_parsed["Topic"]
+        Tip = data_parsed["Tip"]
+        Tip_timeout = "The vote will end on %s." % (datetime.datetime.now() + datetime.timedelta(seconds=int(data_parsed["TimeLimit"]))).strftime("%Y-%m-%d %H:%M:%S")
+        threading.Thread(target=timedout, args=(int(data_parsed["TimeLimit"]),)).start()
         Questions = data_parsed["Questions"].copy()
         Questions_Scored = Questions.copy()
         for question in Questions_Scored:
